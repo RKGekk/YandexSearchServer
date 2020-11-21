@@ -1,0 +1,25 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+*.ipch
+*.suo
+*.db
+*.db-shm
+*.db-wal
+*.opendb
+*.tlog
+*.recipe
+*.pdb
+*.idb
+/Project125/x64/Debug/tests_framework.obj
+/Project125/x64/Debug/tests.obj
+/Project125/x64/Debug/string_processing.obj
+/Project125/x64/Debug/search_server.obj
+/Project125/x64/Debug/request_queue.obj
+/Project125/x64/Debug/read_input_functions.obj
+/Project125/x64/Debug/Project125.log
+/Project125/x64/Debug/main.obj
+/Project125/x64/Debug/document.obj
+*.exe
+*.ilk
