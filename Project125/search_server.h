@@ -16,6 +16,37 @@ const int MAX_RESULT_DOCUMENT_COUNT = 5;
 
 class SearchServer {
 public:
+    struct DocumentData {
+        int rating;
+        DocumentStatus status;
+        std::vector<std::string> words;
+    };
+
+    typedef std::map<int, DocumentData> DocumentDataMap;
+    typedef DocumentDataMap::iterator DocumentDataMapIterator;
+    typedef DocumentDataMap::const_iterator DocumentDataMapConstIterator;
+
+    class key_iterator : public DocumentDataMapIterator {
+    public:
+        key_iterator() : DocumentDataMapIterator() {};
+        key_iterator(DocumentDataMapIterator s) : DocumentDataMapIterator(s) {};
+        const int* operator->() { return &(DocumentDataMapIterator::operator->()->first); }
+        int operator*() { return DocumentDataMapIterator::operator*().first; }
+    };
+
+    class key_const_iterator : public DocumentDataMapConstIterator {
+    public:
+        key_const_iterator() : DocumentDataMapConstIterator() {};
+        key_const_iterator(DocumentDataMapConstIterator s) : DocumentDataMapConstIterator(s) {};
+        const int* operator->() { return &(DocumentDataMapConstIterator::operator->()->first); }
+        int operator*() { return DocumentDataMapConstIterator::operator*().first; }
+    };
+
+    key_iterator begin();
+    key_iterator end();
+    key_const_iterator cbegin() const;
+    key_const_iterator cend() const;
+
     SearchServer() = default;
 
     template <typename StringContainer>
@@ -38,6 +69,7 @@ public:
     void SetStopWords(const std::string& stopWordsText);
 
     void AddDocument(int documentId, const std::string& document, DocumentStatus status, const std::vector<int>& ratings);
+    void RemoveDocument(int document_id);
 
     template <typename DocumentPredicate>
     std::vector<Document> FindTopDocuments(const std::string& rawQuery, const DocumentPredicate& document_predicate) const {
@@ -61,21 +93,16 @@ public:
     }
 
     std::vector<Document> FindTopDocuments(const std::string& rawQuery, DocumentStatus status) const;
-
     std::vector<Document> FindTopDocuments(const std::string& rawQuery) const;
 
-    int GetDocumentCount() const;
+    const std::map<std::string, double>& GetWordFrequencies(int document_id) const;
 
+    int GetDocumentCount() const;
     int GetDocumentId(int index) const;
 
     std::tuple<std::vector<std::string>, DocumentStatus> MatchDocument(const std::string& rawQuery, int documentId) const;
 
 private:
-    struct DocumentData {
-        int rating;
-        DocumentStatus status;
-        std::vector<std::string> words;
-    };
 
     struct Query {
         std::set<std::string> plus_words;
@@ -88,10 +115,12 @@ private:
         bool is_stop;
     };
 
-    std::map<std::string, std::map<int, double>> word_to_document_freqs_;
-    std::map<int, DocumentData> documents_;
     std::set<std::string> m_stopWords;
-    std::vector<int> document_ids_;
+    std::map<std::string, std::map<int, double>> word_to_document_freqs_;
+    std::map<int, std::map<std::string, double>> document_to_word_freqs_;
+    std::map<int, DocumentData> documents_;
+    std::set<int> document_ids_;
+    std::map<std::string, double> emptyMap;
 
     [[nodiscard]]
     bool parseQuery(const std::string& text, Query& query) const;
