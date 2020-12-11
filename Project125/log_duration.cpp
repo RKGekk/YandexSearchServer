@@ -1,6 +1,6 @@
 #include "log_duration.h"
 
-LogDuration::LogDuration(const std::string& id, std::ostream& os) : id_(id), m_os(os) {}
+LogDuration::LogDuration(const std::string& id, std::ostream& os) : id_(id), m_os(os), start_time_(Clock::now()) {}
 
 LogDuration::~LogDuration() {
     using namespace std::chrono;

@@ -10,7 +10,6 @@ void RemoveDuplicates(SearchServer& search_server) {
     std::set<int> dup;
     for (int i = 0; i < document_count; ++i) {
         for (int j = i + 1; j < document_count; ++j) {
-            typedef std::map<std::string, double> TagData;
             int lhsid = search_server.GetDocumentId(i);
             int rhsid = search_server.GetDocumentId(j);
             const TagData& map1 = search_server.GetWordFrequencies(lhsid);

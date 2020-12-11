@@ -16,7 +16,7 @@ public:
 private:
     const std::string id_;
     std::ostream& m_os;
-    const Clock::time_point start_time_ = Clock::now();
+    const Clock::time_point start_time_;
 };
 
 #define PROFILE_CONCAT_INTERNAL(X, Y) X##Y
